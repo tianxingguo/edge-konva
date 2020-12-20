@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  padding: 1rem;
+  background-color: #f0f4f7;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
