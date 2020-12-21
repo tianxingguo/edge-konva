@@ -1,60 +1,44 @@
-{
-  "name": "edge-konva",
-  "version": "1.0.0",
-  "description": "edgexfoundry digital twin",
-  "keywords": [],
-  "main": "dist/index.tsx",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
-    "@types/ramda": "0.26.19",
-    "eventbusjs": "0.2.0",
-    "font-awesome": "4.7.0",
-    "konva": "^3.2.6",
-    "konva-node": "^0.11.2",
-    "ramda": "0.26.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-konva": "^16.8.7-0",
-    "react-scripts": "^4.0.1",
-    "react-scripts-ts": "2.13.0",
-    "react-spring": "8.0.27",
-    "use-image": "1.0.4"
-  },
-  "devDependencies": {
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
-    "typescript": "3.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.10.0",
-    "@typescript-eslint/parser": "^4.10.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^5.0.1",
-    "eslint": "^7.15.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-prettier": "^3.3.0",
-    "html-webpack-plugin": "^4.5.0",
-    "less-loader": "^7.1.0",
-    "prettier-eslint": "^12.0.0",
-    "prettier-eslint-cli": "^5.0.0",
-    "style-loader": "^2.0.0",
-    "ts-node": "^9.1.1",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^5.1.3",
-    "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "scripts": {
-    "start": "cross-env NODE_ENV=development webpack serve",
-    "build": "cross-env NODE_ENV=production webpack",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')//清理文件或文件夹插件
+const  UglifyJSPlugin  = require( "uglifyjs-webpack-plugin" );
+module.exports = {
+    entry:"./src/index.tsx",//编译时的入口文件
+    output: {//指定项目编译完时的输出文件
+        filename: "bundle.js"//编译完后的名字
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js']//自动补齐文件后缀
+    },
+    optimization: {
+        minimizer: [
+        ]
+    },
+    module: {
+        rules: [{//配置loader
+            test: /\.tsx?$/,
+            loader: 'awesome-typescript-loader',
+            exclude: /node_modules/
+        },
+            {
+        test: /\.css$/,
+        use:['style-loader','css-loader']}
+        ]
+    },
+    // 配置本地开发指令
+    devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',//调试定位到代码
+    devServer: {
+        contentBase: './dist',//基于哪个文件夹做为根目录运行
+        stats: 'errors-only',//启动本地服务后在控制台打印那些信息
+        compress: false,//是否启动压缩
+        host: 'localhost',
+        port: 8889//端口
+    },
+    plugins: [//配置插件
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ['./dist']//需要清理的路径
+        }),
+        new HtmlWebpackPlugin({
+            template: './public/index.html'//编译时使用那个html文件为模板来编译
+        })
+    ]
 }
